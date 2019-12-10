@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { QueryImplementation } from 'src/typings/query.implementation';
 import { Course } from './interfaces/course.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CourseDto } from './dto/course.dto';
+import { Service } from 'src/typings/service.implementation';
 @Injectable()
-export class CourseService implements QueryImplementation<Course> {
+export class CourseService implements Service<Course> {
   constructor(
     @InjectModel('course') private readonly courseModel: Model<Course>,
   ) {}
