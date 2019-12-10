@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Role } from './interface/roles.interface';
 import { RolesDto } from './dto/roles.dto';
-import { QueryImplementation } from 'src/typings/query.implementation';
+import { Service } from 'src/typings/service.implementation';
 
 @Injectable()
-export class RolesService implements QueryImplementation<Role> {
+export class RolesService implements Service<Role> {
   constructor(@InjectModel('role') private readonly roleModel: Model<Role>) {}
 
   async findAll() {

@@ -4,9 +4,10 @@ import { Model } from 'mongoose';
 import { Student } from './interface/student.interface';
 import { QueryImplementation } from 'src/typings/query.implementation';
 import { StudentDto } from './dto/student.dto';
+import { Service } from 'src/typings/service.implementation';
 
 @Injectable()
-export class StudentService implements QueryImplementation<Student> {
+export class StudentService implements Service<Student> {
   constructor(
     @InjectModel('student') private readonly studentModel: Model<Student>,
   ) {}
@@ -24,6 +25,8 @@ export class StudentService implements QueryImplementation<Student> {
     return await this.studentModel
       .find()
       .populate('role')
+      .where('name')
+      .equals('student')
       .populate('course')
       .populate('account')
       .exec();
@@ -32,6 +35,8 @@ export class StudentService implements QueryImplementation<Student> {
     return await this.studentModel
       .findById({ _id: id })
       .populate('role')
+      .where('name')
+      .equals('student')
       .populate('course')
       .populate('account')
       .exec();

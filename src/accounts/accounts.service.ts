@@ -1,13 +1,13 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { Account } from './interface/accounts.interface';
-import { AccountsDto } from './dto/account.dto';
-import { Model, Document } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { QueryImplementation } from 'src/typings/query.implementation';
+import { Model } from 'mongoose';
 import { FileFormat } from 'src/typings/file.interface';
-import * as path from 'path';
+import { QueryImplementation } from 'src/typings/query.implementation';
+import { AccountsDto } from './dto/account.dto';
+import { Account } from './interface/accounts.interface';
+import { Service } from 'src/typings/service.implementation';
 @Injectable()
-export class AccountsService implements QueryImplementation<Account> {
+export class AccountsService implements Service<Account> {
   constructor(
     @InjectModel('account')
     private readonly accountModel: Model<Account>,

@@ -3,10 +3,10 @@
  * must have these properties.
  *
  */
-export interface QueryImplementation<T> {
-  create(dataTransferObject: Object): Promise<T>;
-  findAll(model?: T): Promise<T[]>;
-  findOne(id: string): Promise<T>;
-  update(id: string, dataTransferObject: Object): Promise<T>;
-  delete(id: string): Promise<T>;
+export abstract class QueryImplementation<T> {
+  public abstract create(dataTransferObject: Object): Promise<T>;
+  public abstract findAll(model?: T): Promise<T[]>;
+  public abstract findOne(id: string): Promise<T>;
+  public abstract update(id: string, dataTransferObject: Object): Promise<T>;
+  public abstract delete(id: string): Promise<T>;
 }
