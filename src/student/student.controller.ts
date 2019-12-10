@@ -18,12 +18,22 @@ import { StudentDto } from './dto/student.dto';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { RolesService } from 'src/roles/roles.service';
 import { CourseService } from 'src/course/courses.service';
+import { StudentValidation } from './validation/student.validation';
 
 @Controller('student')
 export class StudentController implements QueryImplementation<Student> {
+  private readonly schemaServices = Object.freeze([
+    { schema: 'account', service: this.accountService },
+    { schema: 'role', service: this.roleService },
+    { schema: 'course', service: this.courseService },
+  ]);
   @Post()
-  create(@Body() studentDto: StudentDto): Promise<Student> {
-    this.validateIfExists(studentDto);
+  async create(@Body() studentDto: StudentDto): Promise<Student> {
+    const studentValidation = new StudentValidation(studentDto);
+    studentValidation.serviceExists(this.schemaServices);
+
+    const studentRole = await this.roleService.findOne(studentDto.role);
+    this.validateStudentRole(studentRole.name);
     return this.studentService.create(studentDto);
   }
   @Get()
@@ -32,7 +42,6 @@ export class StudentController implements QueryImplementation<Student> {
   }
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Student> {
-    this.validateId(id);
     return this.studentService.findOne(id);
   }
   @Put(':id')
@@ -40,42 +49,27 @@ export class StudentController implements QueryImplementation<Student> {
     @Param('id') id: string,
     @Body() studentDto: StudentDto,
   ): Promise<Student> {
-    this.validateId(id);
-    this.validateIfExists(studentDto);
+    const studentValidation = new StudentValidation(studentDto);
+    studentValidation.validateId(id);
+    this.validateStudentRole(studentDto.role);
+    studentValidation.serviceExists(this.schemaServices);
     return this.studentService.update(id, studentDto);
   }
   @Delete(':id')
   delete(@Param('id') id: string): Promise<Student> {
-    this.validateId(id);
+    const studentValidation = new StudentValidation();
+    studentValidation.validateId(id);
     return this.studentService.delete(id);
   }
-  private validateIfExists(studentDto: StudentDto) {
-    const errors = [];
-    if (!this.accountService.findOne(studentDto.account)) {
-      errors.push({
-        name: 'account',
-        message: `Account: ${studentDto.account} not found`,
-      });
-    }
-    if (!this.roleService.findOne(studentDto.role)) {
-      errors.push({
-        name: 'role',
-        message: `Role: ${studentDto.role} not found`,
-      });
-    }
-    if (!this.courseService.findOne(studentDto.course)) {
-      errors.push({
-        name: 'course',
-        message: `Role: ${studentDto.course} not found`,
-      });
-    }
-    if (errors.length) {
-      throw new HttpException(errors, HttpStatus.NOT_FOUND);
-    }
-  }
-  private validateId(id: string) {
-    if (!id) {
-      throw new BadRequestException('Id must be provided');
+  /**
+   *
+   * Will change it to globalValidation, but the way I implemented
+   * this is stupid. For example, I couldn't determine if the
+   * schema I'm validation is an `account` or a `role`
+   */
+  private validateStudentRole(role: string) {
+    if (role !== 'student') {
+      throw new BadRequestException('Role must be a student to be registered');
     }
   }
   constructor(
