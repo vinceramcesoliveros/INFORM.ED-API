@@ -36,3 +36,7 @@ lerna-debug.log*
 
 #env
 .env
+
+#Images
+/src/accounts/uploads
+/uploads

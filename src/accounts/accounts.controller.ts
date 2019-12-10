@@ -6,46 +6,95 @@ import {
   Body,
   Delete,
   Post,
-  UsePipes,
   BadRequestException,
+  NotFoundException,
+  UploadedFile,
+  UseInterceptors,
+  Res,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
-import { AccountsDto } from './dto/accounts.dto';
-import { AccountsPipe } from 'src/accounts.pipe';
-
+import { AccountsDto } from './dto/account.dto';
+import { Account } from './interface/accounts.interface';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { FileFormat } from 'src/typings/file.interface';
+import { diskStorage } from 'multer';
+import { fileName, fileDestination } from './fileUpload';
+import { Response } from 'express';
+import { join } from 'path';
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountService: AccountsService) {}
 
   @Get()
-  async findAll() {
-    return await this.accountService.findAll();
+  findAll(): Promise<Account[]> {
+    return this.accountService.findAll();
+
+    // return JSON.stringify(accountToString);
   }
   @Get(':id')
   async findOne(@Param('id') id: string) {
     this.validateId(id);
-    return await this.accountService.findOne(id);
+    const foundAccount = await this.accountService.findOne(id);
+    if (!foundAccount) {
+      throw new NotFoundException(`Account: ${id} not found`);
+    }
+    return foundAccount;
   }
 
   @Post()
-  @UsePipes(new AccountsPipe())
-  async createAccount(@Body() createAccountDto: AccountsDto) {
-    return await this.accountService.create(createAccountDto);
+  createAccount(@Body() createAccountDto: AccountsDto): Promise<Account> {
+    return this.accountService.create(createAccountDto);
   }
-
   @Put(':id')
-  @UsePipes(new AccountsPipe())
-  async update(@Param('id') id: string, @Body() account: AccountsDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() account: AccountsDto,
+  ): Promise<Account> {
     this.validateId(id);
-    return await this.accountService.update(id, account);
+    if (!(await this.accountService.findOne(id))) {
+      throw new NotFoundException(`Account:${id} not found`);
+    }
+    return this.accountService.update(id, account);
   }
 
   @Delete(':id')
-  async deleteAccount(@Param() id: string) {
+  async deleteAccount(@Param() id: string): Promise<Account> {
     this.validateId(id);
-    return await this.accountService.delete(id);
+
+    if (!(await this.accountService.findOne(id))) {
+      throw new NotFoundException(`Account:${id} not found`);
+    }
+    return this.accountService.delete(id);
   }
 
+  @Post(':id/upload')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        filename: fileName,
+        destination: fileDestination,
+      }),
+    }),
+  )
+  uploadFile(
+    @Param('id') id: string,
+    @UploadedFile()
+    file: FileFormat,
+  ) {
+    // this.accountService.insertImagePath(id, file);
+    return this.accountService.insertImagePath(id, file);
+  }
+  @Get('/uploads/:id/:imgPath')
+  getImageId(
+    @Param('id') id: string,
+    @Param('imgPath') imgPath: string,
+    @Res() response: Response,
+  ) {
+    console.log(imgPath, id);
+    return response.sendFile(
+      join(__dirname, '..', 'public', 'uploads', id, imgPath),
+    );
+  }
   private validateId(id: string) {
     if (!id) {
       throw new BadRequestException('ID must be provided');
