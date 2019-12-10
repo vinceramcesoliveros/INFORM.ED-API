@@ -33,7 +33,7 @@ export class StudentController implements QueryImplementation<Student> {
     studentValidation.serviceExists(this.schemaServices);
 
     const studentRole = await this.roleService.findOne(studentDto.role);
-    this.validateStudentRole(studentRole.name);
+    studentValidation.validateStudentRole(studentRole.name);
     return this.studentService.create(studentDto);
   }
   @Get()
@@ -51,7 +51,7 @@ export class StudentController implements QueryImplementation<Student> {
   ): Promise<Student> {
     const studentValidation = new StudentValidation(studentDto);
     studentValidation.validateId(id);
-    this.validateStudentRole(studentDto.role);
+    studentValidation.validateStudentRole(studentDto.role);
     studentValidation.serviceExists(this.schemaServices);
     return this.studentService.update(id, studentDto);
   }
@@ -60,17 +60,6 @@ export class StudentController implements QueryImplementation<Student> {
     const studentValidation = new StudentValidation();
     studentValidation.validateId(id);
     return this.studentService.delete(id);
-  }
-  /**
-   *
-   * Will change it to globalValidation, but the way I implemented
-   * this is stupid. For example, I couldn't determine if the
-   * schema I'm validation is an `account` or a `role`
-   */
-  private validateStudentRole(role: string) {
-    if (role !== 'student') {
-      throw new BadRequestException('Role must be a student to be registered');
-    }
   }
   constructor(
     private readonly studentService: StudentService,

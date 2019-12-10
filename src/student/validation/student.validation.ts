@@ -26,6 +26,12 @@ export class StudentValidation {
       throw new BadRequestException('Id must be provided', id);
     }
   }
+
+  public validateStudentRole(role: string) {
+    if (role !== 'student') {
+      throw new BadRequestException('Role must be a student to be registered');
+    }
+  }
 }
 
 interface ServiceValidation<T> {
