@@ -1,5 +1,5 @@
-<center><h1>📚INFORM.ED API📚</h1>
-<sub>API Integration for the Front-end applcation using <a href="https://nestjs.com" alt="Backend API">NestJS</a> to make scalable applications</sub></center>
+<div style="text-align:center"><h1>📚INFORM.ED API📚</h1>
+<p>API Integration for the Front-end applcation using <a href="https://nestjs.com" alt="Backend API">NestJS</a> to make scalable applications</p></div>
 
 ## :rotating_light: Notice!
 
@@ -23,3 +23,41 @@ To make integration easier than to create a dummy frontend data. Nest Js proves 
 - 🌀[TypeORM](https://typeorm.io)(SOON)
 - 😎[Swagger](https://swagger.io)
 - 🦠[Microservices from Nestjs](https://microservices.io/)
+
+### Installation
+
+**Download the following**
+> Be sure to check the documentation on how to install the following tools.
+
+- [nodejs](https://nodejs.org)
+- [yarn](https://yarnpkg.com)
+- [mongodb](https://mongodb.com)
+- [nestjs](https://nestjs.com)
+
+### Steps:
+1. Nodejs - be sure to type `npm --version` and `node --version`
+
+```sh
+  # Node Version
+  npm --version
+  # 12.x.x
+
+  node --version
+  # 8.x.x
+```
+2. Yarn
+```sh
+  #Yarn version
+  yarn --version
+```
+
+### Environment Variables
+If you know how to setup mongodb or any other database, be sure to have their address stored in your `.env` file
+
+> **Note**
+> Don't Put Environment variables in your repository
+
+**`development.env`**
+```env
+MONGODB_URI=mongo://localhost:27017
+```
