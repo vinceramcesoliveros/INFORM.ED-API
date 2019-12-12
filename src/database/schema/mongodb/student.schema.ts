@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 
+import * as uniqueValidator from 'mongoose-unique-validator';
 export const StudentSchema = new mongoose.Schema(
   {
     yearLevel: {
@@ -18,11 +19,6 @@ export const StudentSchema = new mongoose.Schema(
       ref: 'course',
       required: true,
     },
-    role: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'role',
-      required: true,
-    },
     account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'account',
@@ -30,4 +26,4 @@ export const StudentSchema = new mongoose.Schema(
     },
   },
   { timestamps: true },
-);
+).plugin(uniqueValidator);
