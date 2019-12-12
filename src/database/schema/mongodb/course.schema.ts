@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 
+import * as uniqueValidator from 'mongoose-unique-validator';
 export const CourseSchema = new mongoose.Schema(
   {
     name: {
@@ -16,4 +17,4 @@ export const CourseSchema = new mongoose.Schema(
     },
   },
   { timestamps: true },
-);
+).plugin(uniqueValidator);
