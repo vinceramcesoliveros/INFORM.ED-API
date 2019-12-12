@@ -1,8 +1,6 @@
-import { IsString, IsAlpha, IsDefined, IsMongoId } from 'class-validator';
+import { IsString, IsAlpha, IsDefined } from 'class-validator';
 
 export class RolesDto {
-  @IsMongoId()
-  readonly id?: string;
   @IsString()
   @IsAlpha()
   @IsDefined()
