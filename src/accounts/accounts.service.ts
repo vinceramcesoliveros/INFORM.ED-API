@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FileFormat } from 'src/typings/file.interface';
@@ -16,7 +16,7 @@ export class AccountsService implements Service<Account> {
   async findAll(): Promise<Account[]> {
     return await this.accountModel
       .find()
-      .select('firstName middleName lastName gender role image')
+      .select('-createdAt -updatedAt -password')
       .populate('role', 'name')
       .exec();
   }
@@ -24,6 +24,7 @@ export class AccountsService implements Service<Account> {
   async findOne(id: string) {
     return await this.accountModel
       .findById({ _id: id })
+      .select('-createdAt -updatedAt -password')
       .populate('role', 'name')
       .exec();
   }
@@ -37,6 +38,7 @@ export class AccountsService implements Service<Account> {
   async update(id: string, account: AccountsDto) {
     return await this.accountModel
       .findByIdAndUpdate(id, account)
+      .select('-createdAt -updatedAt -password')
       .populate('role', 'name')
       .exec();
   }

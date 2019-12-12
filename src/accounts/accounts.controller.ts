@@ -43,7 +43,11 @@ export class AccountsController {
 
   @Post()
   createAccount(@Body() createAccountDto: AccountsDto): Promise<Account> {
-    return this.accountService.create(createAccountDto);
+    try {
+      return this.accountService.create(createAccountDto);
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
   @Put(':id')
   async update(

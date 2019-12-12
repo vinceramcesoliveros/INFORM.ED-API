@@ -7,7 +7,15 @@ import {
   IsDefined,
   IsOptional,
 } from 'class-validator';
-export class AccountsDto {
+import { DataTransferObject } from 'src/typings/dto.implementation';
+export class AccountsDto extends DataTransferObject {
+  @IsDefined()
+  @IsString()
+  username: string;
+
+  @IsDefined()
+  @IsString()
+  password: string;
   @IsDefined()
   @IsAlpha()
   @IsString()

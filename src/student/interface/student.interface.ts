@@ -11,5 +11,4 @@ export interface Student extends Document {
   readonly units: string;
   readonly account?: Account;
   readonly course?: Course;
-  readonly role?: Role;
 }

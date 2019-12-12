@@ -1,9 +1,6 @@
 import {
   Controller,
   Post,
-  NotFoundException,
-  HttpException,
-  BadRequestException,
   Get,
   Param,
   Put,
@@ -18,22 +15,22 @@ import { StudentDto } from './dto/student.dto';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { RolesService } from 'src/roles/roles.service';
 import { CourseService } from 'src/course/courses.service';
-import { StudentValidation } from './validation/student.validation';
+import { ModelValidation } from '../validation/model.validation';
 
 @Controller('student')
 export class StudentController implements QueryImplementation<Student> {
-  private readonly schemaServices = Object.freeze([
+  private readonly serviceValidation = [
     { schema: 'account', service: this.accountService },
     { schema: 'role', service: this.roleService },
     { schema: 'course', service: this.courseService },
-  ]);
+  ];
   @Post()
   async create(@Body() studentDto: StudentDto): Promise<Student> {
-    const studentValidation = new StudentValidation(studentDto);
-    studentValidation.serviceExists(this.schemaServices);
-
-    const studentRole = await this.roleService.findOne(studentDto.role);
-    studentValidation.validateStudentRole(studentRole.name);
+    const studentValidation = new ModelValidation({
+      dataTransferObject: studentDto,
+      serviceValidation: this.serviceValidation,
+    });
+    studentValidation.serviceExists();
     return this.studentService.create(studentDto);
   }
   @Get()
@@ -42,24 +39,40 @@ export class StudentController implements QueryImplementation<Student> {
   }
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Student> {
-    return this.studentService.findOne(id);
+    const studentValidation = new ModelValidation();
+    return studentValidation.validateId({
+      id,
+      service: this.studentService,
+      type: 'findOne',
+    });
   }
   @Put(':id')
   update(
     @Param('id') id: string,
     @Body() studentDto: StudentDto,
   ): Promise<Student> {
-    const studentValidation = new StudentValidation(studentDto);
-    studentValidation.validateId(id);
-    studentValidation.validateStudentRole(studentDto.role);
-    studentValidation.serviceExists(this.schemaServices);
-    return this.studentService.update(id, studentDto);
+    const studentValidation = new ModelValidation({
+      dataTransferObject: studentDto,
+      serviceValidation: this.serviceValidation,
+    });
+
+    // studentValidation.validate({ column: studentDto.role, value: 'Student' });
+    studentValidation.serviceExists();
+    return studentValidation.validateId({
+      id,
+      service: this.studentService,
+      type: 'update',
+      body: studentDto,
+    });
   }
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<Student> {
-    const studentValidation = new StudentValidation();
-    studentValidation.validateId(id);
-    return this.studentService.delete(id);
+  async delete(@Param('id') id: string): Promise<Student> {
+    const studentValidation = new ModelValidation();
+    return await studentValidation.validateId({
+      id,
+      service: this.studentService,
+      type: 'delete',
+    });
   }
   constructor(
     private readonly studentService: StudentService,

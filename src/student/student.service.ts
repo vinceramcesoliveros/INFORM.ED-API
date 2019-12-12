@@ -15,38 +15,39 @@ export class StudentService implements Service<Student> {
     const createStudent = new this.studentModel(studentDto);
     const saveStudent = await createStudent.save();
     await saveStudent
-      .populate('role')
       .populate('course')
-      .populate('account')
+      .populate({ path: 'account', populate: { path: 'role' } })
       .execPopulate();
     return saveStudent;
   }
   async findAll(): Promise<Student[]> {
     return await this.studentModel
       .find()
-      .populate('role')
-      .where('name')
-      .equals('student')
-      .populate('course')
-      .populate('account')
+      .select('-createdAt -updatedAt')
+      .populate('course', 'name description creditUnits')
+      .populate({
+        path: 'account',
+        select: 'firstName middleName lastName gender',
+        populate: { path: 'role', select: 'name' },
+      })
       .exec();
   }
   async findOne(id: string): Promise<Student> {
     return await this.studentModel
       .findById({ _id: id })
-      .populate('role')
-      .where('name')
-      .equals('student')
-      .populate('course')
-      .populate('account')
+      .populate('course', 'name description creditUnits')
+      .populate({
+        path: 'account',
+        select: 'firstName middleName lastName gender',
+        populate: { path: 'role', select: 'name' },
+      })
       .exec();
   }
   async update(id: string, studentDto: StudentDto): Promise<Student> {
     return await this.studentModel
       .findByIdAndUpdate(id, studentDto)
-      .populate('role')
       .populate('course')
-      .populate('account')
+      .populate({ path: 'account', populate: { path: 'role' } })
       .exec();
   }
   async delete(id: string): Promise<Student> {
