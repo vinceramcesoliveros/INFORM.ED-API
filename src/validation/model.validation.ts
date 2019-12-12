@@ -3,6 +3,12 @@ import { Service } from 'src/typings/service.implementation';
 import { HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
 import { Student } from '../student/interface/student.interface';
 import { DataTransferObject } from 'src/typings/dto.implementation';
+import {
+  ServiceValidation,
+  ValidationQuery,
+  ValidationColumn,
+  ServiceValidator,
+} from './model.interface';
 /**
  * Add a scenario when a particular id is not a valid ID or it does not
  * exists from the database to ensure that there can be no errors.
@@ -72,23 +78,4 @@ export class ModelValidation {
       throw new BadRequestException(`The value must be a(n) "${column}"`);
     }
   }
-}
-
-interface ServiceValidation<T> {
-  schema: string;
-  service: Service<T>;
-}
-interface ServiceValidator {
-  dataTransferObject?: DataTransferObject;
-  serviceValidation?: ServiceValidation<any | null>[];
-}
-interface ValidationColumn {
-  value: string | number | boolean;
-  column: string | number | boolean;
-}
-interface ValidationQuery<T> {
-  service: Service<T>;
-  type: 'update' | 'delete' | 'findOne';
-  id: string;
-  body?: DataTransferObject;
 }
