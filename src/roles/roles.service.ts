@@ -6,7 +6,7 @@ import { RolesDto } from './dto/roles.dto';
 import { Service } from 'src/typings/service.implementation';
 
 @Injectable()
-export class RolesService implements Service<Role> {
+export class RolesService implements Service<Role, RolesDto> {
   constructor(@InjectModel('role') private readonly roleModel: Model<Role>) {}
 
   async findAll() {

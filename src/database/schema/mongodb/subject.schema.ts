@@ -1,7 +1,8 @@
-import * as mongoose from 'mongoose';
-import * as mongooseHidden from 'mongoose-hidden';
+import { Schema } from 'mongoose';
 import * as uniqueValidator from 'mongoose-unique-validator';
-export const CourseSchema = new mongoose.Schema(
+import * as mongooseHidden from 'mongoose-hidden';
+
+export const subjectSchema = new Schema(
   {
     name: {
       type: String,
@@ -11,12 +12,13 @@ export const CourseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    creditUnits: {
-      type: String,
-      required: true,
+    units: {
+      type: Number,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
 )
   .plugin(uniqueValidator)
   .plugin(mongooseHidden);

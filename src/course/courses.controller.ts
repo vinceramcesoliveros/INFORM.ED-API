@@ -13,7 +13,8 @@ import { CourseService } from './courses.service';
 import { CourseDto } from './dto/course.dto';
 
 @Controller('course')
-export class CourseController implements QueryImplementation<Course> {
+export class CourseController
+  implements QueryImplementation<Course, CourseDto> {
   constructor(private readonly courseService: CourseService) {}
   @Post()
   create(@Body() courseDto: CourseDto): Promise<Course> {

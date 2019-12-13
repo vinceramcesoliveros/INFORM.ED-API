@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 
 import * as uniqueValidator from 'mongoose-unique-validator';
+import * as mongooseHidden from 'mongoose-hidden';
 export const StudentSchema = new mongoose.Schema(
   {
     yearLevel: {
@@ -26,4 +27,6 @@ export const StudentSchema = new mongoose.Schema(
     },
   },
   { timestamps: true },
-).plugin(uniqueValidator);
+)
+  .plugin(uniqueValidator)
+  .plugin(mongooseHidden);

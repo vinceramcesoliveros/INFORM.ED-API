@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-
+import * as mongooseHidden from 'mongoose-hidden';
 import * as uniqueValidator from 'mongoose-unique-validator';
 export const RoleSchema = new mongoose.Schema(
   {
@@ -12,4 +12,6 @@ export const RoleSchema = new mongoose.Schema(
   {
     timestamps: true,
   },
-).plugin(uniqueValidator);
+)
+  .plugin(uniqueValidator)
+  .plugin(mongooseHidden);

@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { CourseDto } from './dto/course.dto';
 import { Service } from 'src/typings/service.implementation';
 @Injectable()
-export class CourseService implements Service<Course> {
+export class CourseService implements Service<Course, CourseDto> {
   constructor(
     @InjectModel('course') private readonly courseModel: Model<Course>,
   ) {}

@@ -2,6 +2,12 @@ import { BadRequestException } from '@nestjs/common/exceptions';
 import { Request } from 'express';
 import { existsSync, mkdirSync, renameSync } from 'fs';
 
+const ImageType = {
+  'image/gif': '.gif',
+  'image/png': '.png',
+  'image/jpg': '.jpg',
+  'image/jpeg': '.jpeg',
+};
 export const fileName = (
   req: Request,
   file: Express.Multer.File,
@@ -12,12 +18,6 @@ export const fileName = (
       throw new BadRequestException('File must be image');
     }
     console.log(file);
-    const ImageType = {
-      'image/gif': '.gif',
-      'image/png': '.png',
-      'image/jpg': '.jpg',
-      'image/jpeg': '.jpeg',
-    };
 
     cb(null, req.params.id + ImageType[file.mimetype]);
   } catch (error) {
@@ -31,7 +31,10 @@ export const fileDestination = (
 ) => {
   try {
     const uploadDirectory = `./dist/public/uploads/${req.params.id}`;
-    if (!file.originalname.match(/\.(gif|jpg|jpeg|tiff|png)$/i)) {
+    if (
+      !file.originalname.match(/\.(gif|jpg|jpeg|tiff|png)$/i) ||
+      !file.mimetype.match(/(gif|jpg|jpeg|tiff|png)$/i)
+    ) {
       throw new BadRequestException(
         'File must be an image or supported by any images',
       );

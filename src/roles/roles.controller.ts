@@ -14,7 +14,7 @@ import { QueryImplementation } from 'src/typings/query.implementation';
 import { Role } from './interface/roles.interface';
 import { RolesInterceptor } from './roles.interceptor';
 @Controller('roles')
-export class RolesController implements QueryImplementation<Role> {
+export class RolesController implements QueryImplementation<Role, RolesDto> {
   constructor(private readonly roleService: RolesService) {}
 
   @Get()

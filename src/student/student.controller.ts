@@ -18,7 +18,8 @@ import { CourseService } from 'src/course/courses.service';
 import { ModelValidation } from '../validation/model.validation';
 
 @Controller('student')
-export class StudentController implements QueryImplementation<Student> {
+export class StudentController
+  implements QueryImplementation<Student, StudentDto> {
   private readonly serviceValidation = [
     { schema: 'account', service: this.accountService },
     { schema: 'role', service: this.roleService },

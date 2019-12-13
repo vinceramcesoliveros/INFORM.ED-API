@@ -21,8 +21,10 @@ import { diskStorage } from 'multer';
 import { fileName, fileDestination } from './fileUpload';
 import { Response } from 'express';
 import { join } from 'path';
+import { QueryImplementation } from 'src/typings/query.implementation';
 @Controller('accounts')
-export class AccountsController {
+export class AccountsController
+  implements QueryImplementation<Account, AccountsDto> {
   constructor(private readonly accountService: AccountsService) {}
 
   @Get()
@@ -42,7 +44,7 @@ export class AccountsController {
   }
 
   @Post()
-  createAccount(@Body() createAccountDto: AccountsDto): Promise<Account> {
+  create(@Body() createAccountDto: AccountsDto): Promise<Account> {
     try {
       return this.accountService.create(createAccountDto);
     } catch (err) {
@@ -62,7 +64,7 @@ export class AccountsController {
   }
 
   @Delete(':id')
-  async deleteAccount(@Param() id: string): Promise<Account> {
+  async delete(@Param() id: string): Promise<Account> {
     this.validateId(id);
 
     if (!(await this.accountService.findOne(id))) {

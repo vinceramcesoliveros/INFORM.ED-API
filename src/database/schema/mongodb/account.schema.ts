@@ -1,6 +1,7 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 import * as uniqueValidator from 'mongoose-unique-validator';
-export const AccountSchema = new mongoose.Schema(
+import * as mongooseHidden from 'mongoose-hidden';
+export const AccountSchema = new Schema(
   {
     username: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
@@ -9,7 +10,7 @@ export const AccountSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     gender: { type: String, required: true },
     role: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'role',
       required: true,
     },
@@ -21,4 +22,6 @@ export const AccountSchema = new mongoose.Schema(
   {
     timestamps: true,
   },
-).plugin(uniqueValidator);
+)
+  .plugin(uniqueValidator)
+  .plugin(mongooseHidden);

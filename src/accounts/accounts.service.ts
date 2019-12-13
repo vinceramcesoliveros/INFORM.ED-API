@@ -7,7 +7,7 @@ import { AccountsDto } from './dto/account.dto';
 import { Account } from './interface/accounts.interface';
 import { Service } from 'src/typings/service.implementation';
 @Injectable()
-export class AccountsService implements Service<Account> {
+export class AccountsService implements Service<Account, AccountsDto> {
   constructor(
     @InjectModel('account')
     private readonly accountModel: Model<Account>,

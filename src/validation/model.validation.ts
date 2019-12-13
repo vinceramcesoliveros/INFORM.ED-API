@@ -16,7 +16,7 @@ import {
  */
 export class ModelValidation {
   private readonly dataTransferObject?: DataTransferObject;
-  private readonly serviceValidation?: ServiceValidation<any>[];
+  private readonly serviceValidation?: ServiceValidation<any, any>[];
   constructor({
     dataTransferObject,
     serviceValidation,
@@ -51,7 +51,12 @@ export class ModelValidation {
    * - `DELETE(ID)`
    *
    */
-  public async validateId({ id, service, type, body }: ValidationQuery<any>) {
+  public async validateId({
+    id,
+    service,
+    type,
+    body,
+  }: ValidationQuery<any, any>) {
     try {
       if (!id) {
         throw `Id must be provided`;

@@ -8,6 +8,7 @@ import { CourseModule } from './course/courses.module';
 import { StudentModule } from './student/student.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
+import { SubjectModule } from './subject/subject.module';
 @Module({
   imports: [
     AccountsModule,
@@ -22,6 +23,7 @@ import { ConfigService } from './config/config.service';
     CourseModule,
     StudentModule,
     ConfigModule,
+    SubjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],

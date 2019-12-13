@@ -7,7 +7,7 @@ import { StudentDto } from './dto/student.dto';
 import { Service } from 'src/typings/service.implementation';
 
 @Injectable()
-export class StudentService implements Service<Student> {
+export class StudentService implements Service<Student, StudentDto> {
   constructor(
     @InjectModel('student') private readonly studentModel: Model<Student>,
   ) {}
