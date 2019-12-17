@@ -2,7 +2,6 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FileFormat } from 'src/typings/file.interface';
-import { QueryImplementation } from 'src/typings/query.implementation';
 import { AccountsDto } from './dto/account.dto';
 import { Account } from './interface/accounts.interface';
 import { Service } from 'src/typings/service.implementation';
