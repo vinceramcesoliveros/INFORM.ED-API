@@ -7,7 +7,7 @@ export interface ServiceValidation<T, D> {
 }
 export interface ServiceValidator {
   dataTransferObject?: DataTransferObject;
-  serviceValidation?: ServiceValidation<any | null, any>[];
+  serviceValidation?: ServiceValidation<any, any>[];
 }
 export interface ValidationColumn {
   value: string | number | boolean;
