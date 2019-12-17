@@ -6,6 +6,7 @@ import {
   IsMongoId,
   IsDefined,
   IsOptional,
+  IsEmail,
 } from 'class-validator';
 import { DataTransferObject } from 'src/typings/dto.implementation';
 export class AccountsDto extends DataTransferObject {
@@ -44,4 +45,7 @@ export class AccountsDto extends DataTransferObject {
   @IsOptional()
   @IsString()
   readonly image?: string;
+  @IsDefined()
+  @IsEmail()
+  readonly email: string;
 }
